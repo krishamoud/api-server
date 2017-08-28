@@ -10,6 +10,7 @@ import (
 
 	// Resources
 	"github.com/krishamoud/game-server/app/bundles/containers"
+	"github.com/krishamoud/game-server/app/bundles/deployments"
 	"github.com/krishamoud/game-server/app/bundles/users"
 
 	// common middleware
@@ -27,6 +28,7 @@ func Router() *mux.Router {
 	// Controllers declaration
 	cc := &containers.ContainersController{}
 	uc := &users.UsersController{}
+	dc := &deployments.DeploymentsController{}
 
 	// middleware chaining
 	commonHandlers := alice.New(middleware.LoggingHandler, middleware.RecoverHandler)
@@ -43,6 +45,9 @@ func Router() *mux.Router {
 	// User Information Routes
 	s.Handle("/users", securedHandlers.ThenFunc(uc.Index)).Methods("GET")
 	s.Handle("/users/{userId}", securedHandlers.ThenFunc(uc.Show)).Methods("GET")
+
+	// Deployment endpoint Routes
+	s.Handle("/deployments", securedHandlers.ThenFunc(dc.Create)).Methods("POST")
 
 	// Auth Routes
 	s.Handle("/auth", commonHandlers.ThenFunc(uc.Auth)).Methods("POST")
