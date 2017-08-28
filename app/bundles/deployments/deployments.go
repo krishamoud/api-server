@@ -2,8 +2,6 @@
 package deployments
 
 import (
-	_ "fmt"
-	_ "github.com/gorilla/mux"
 	"github.com/krishamoud/game-server/app/common/controller"
 	"net/http"
 )
