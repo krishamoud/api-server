@@ -8,7 +8,7 @@ import (
 	"github.com/krishamoud/game-server/app/common/db"
 	_ "github.com/krishamoud/game-server/app/common/docker"
 
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 

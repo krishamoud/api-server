@@ -28,3 +28,8 @@ func (c *DeploymentsController) Create(w http.ResponseWriter, r *http.Request) {
 		http.StatusOK,
 	)
 }
+
+// Test is a testing endpoint
+func (c *DeploymentsController) Test(w http.ResponseWriter, r *http.Request) {
+	panic("Fucked")
+}

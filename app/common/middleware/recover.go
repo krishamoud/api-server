@@ -2,7 +2,7 @@
 package middleware
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -11,7 +11,9 @@ func RecoverHandler(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				log.Printf("Panic: %+v", err)
+				log.WithFields(log.Fields{
+					"error": err,
+				}).Error("Panic")
 				http.Error(w, http.StatusText(500), 500)
 			}
 		}()

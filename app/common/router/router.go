@@ -52,6 +52,9 @@ func Router() *mux.Router {
 	// Auth Routes
 	s.Handle("/auth", commonHandlers.ThenFunc(uc.Auth)).Methods("POST")
 
+	// Test Routes
+	s.Handle("/test", commonHandlers.ThenFunc(dc.Test)).Methods("POST")
+
 	// Naked route: only being used for testing purposes at the moment
 	// change home.html to get logs for a certain container
 	r.Handle("/", commonHandlers.ThenFunc(serveHome)).Methods("GET")
