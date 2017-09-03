@@ -8,8 +8,9 @@ import (
 	"github.com/krishamoud/game-server/app/common/db"
 	_ "github.com/krishamoud/game-server/app/common/docker"
 
-	log "github.com/sirupsen/logrus"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {

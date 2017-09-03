@@ -5,16 +5,17 @@ package users
 import (
 	"crypto/sha256"
 	"fmt"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/krishamoud/game-server/app/common/db"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
-	"time"
 )
 
 // User is the basic struct used to hold basic user information
 type User struct {
-	Id        string  `json:"_id" bson:"_id"`
+	ID        string  `json:"_id" bson:"_id"`
 	Emails    []Email `json:"emails"`
 	Username  string  `json:"username"`
 	Services  `json:"services"`
@@ -38,7 +39,7 @@ type Password struct {
 }
 
 // TODO: change this to something more secret
-var tokenEncodeString string = "secret"
+var tokenEncodeString = "secret"
 
 // NewPassword creates a HMACSHA256 of a given string then returns that SHA
 // bcrypt-ed
@@ -67,7 +68,7 @@ func Authenticate(password, bcryptStr string) error {
 }
 
 // showUser finds a single user based on a given id
-func showUser(id, reqUserId string) (*User, error) {
+func showUser(id, reqUserID string) (*User, error) {
 	var err error
 	u := db.DB.C("users")
 	result := &User{}
@@ -93,7 +94,7 @@ func indexUsers() (*[]User, error) {
 // createUser creates a user with a given email and password
 func createUser(email, password string) (*User, error) {
 	u := db.DB.C("users")
-	id := db.RandomId(17)
+	id := db.RandomID(17)
 	emails := []Email{
 		Email{
 			Address:  email,
@@ -110,7 +111,7 @@ func createUser(email, password string) (*User, error) {
 		},
 	}
 	user := &User{
-		Id:        id,
+		ID:        id,
 		Emails:    emails,
 		Username:  email,
 		Services:  services,
@@ -159,7 +160,7 @@ func createToken(user *User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
 	// set some claims
-	claims["_id"] = (*user).Id
+	claims["_id"] = (*user).ID
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 	token.Claims = claims
 

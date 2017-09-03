@@ -1,17 +1,18 @@
 package gifs
 
 import (
-	"github.com/krishamoud/game-server/app/common/controller"
 	"net/http"
+
+	"github.com/krishamoud/game-server/app/common/controller"
 )
 
-// UsersController struct
-type GifsController struct {
+// Controller struct
+type Controller struct {
 	common.Controller
 }
 
 // Create a gif
-func (c *GifsController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	gif := NewGif(r)
 	c.SendJSON(
 		w,

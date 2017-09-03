@@ -2,9 +2,10 @@
 package middleware
 
 import (
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type loggingResponseWriter struct {

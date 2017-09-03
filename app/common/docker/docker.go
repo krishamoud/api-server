@@ -4,6 +4,7 @@ package docker
 import "github.com/docker/docker/client"
 
 var (
+	// DockerConn is the persistent connection to the docker client
 	DockerConn *client.Client
 	err        error
 )

@@ -4,9 +4,16 @@ package middleware
 import (
 	"context"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"net/http"
 	"strings"
+
+	"github.com/dgrijalva/jwt-go"
+)
+
+type ctxKey int
+
+const (
+	ctxUserID ctxKey = iota
 )
 
 // Authenticate is a middleware that reads the Authorization header to find a
@@ -48,14 +55,14 @@ func Authenticate(next http.Handler) http.Handler {
 
 		// Check token is valid
 		if parsedToken != nil && parsedToken.Valid {
-			userId := parsedToken.Claims.(jwt.MapClaims)["_id"]
-			if userId == nil {
+			userID := parsedToken.Claims.(jwt.MapClaims)["_id"]
+			if userID == nil {
 				http.Error(w, "Unauthorized", http.StatusUnauthorized)
 				return
 			}
 			// Everything worked! Set the user in the context.
 			ctx := r.Context()
-			ctx = context.WithValue(ctx, "userId", userId)
+			ctx = context.WithValue(ctx, ctxUserID, userID)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
@@ -64,4 +71,9 @@ func Authenticate(next http.Handler) http.Handler {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	})
+}
+
+// UserID returns the UserID from the context of authenticated requests
+func UserID(c context.Context) string {
+	return c.Value(ctxUserID).(string)
 }

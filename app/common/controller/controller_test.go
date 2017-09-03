@@ -1,12 +1,13 @@
 package common_test
 
 import (
-	"github.com/krishamoud/game-server/app/common"
-	. "github.com/smartystreets/goconvey/convey"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/krishamoud/game-server/app/common/controller"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestControllerSpec(t *testing.T) {

@@ -1,18 +1,21 @@
 package users
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/krishamoud/game-server/app/common/controller"
-	"net/http"
+	"github.com/krishamoud/game-server/app/common/middleware"
 )
 
-// UsersController struct
-type UsersController struct {
+// Controller struct
+type Controller struct {
 	common.Controller
 }
 
 // Index func return all users
-func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Index(w http.ResponseWriter, r *http.Request) {
 	var err error
 	result, err := indexUsers()
 	if c.CheckError(err, http.StatusInternalServerError, w) {
@@ -27,7 +30,7 @@ func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
 }
 
 // New shows the new user page
-func (c *UsersController) New(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) New(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept")
 	c.SendJSON(
@@ -39,7 +42,7 @@ func (c *UsersController) New(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create saves a new user to the database
-func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	user, err := createUser(email, password)
@@ -55,13 +58,14 @@ func (c *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // Show a single user
-func (c *UsersController) Show(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Show(w http.ResponseWriter, r *http.Request) {
 	var err error
 	vars := mux.Vars(r)
-	userId := vars["userId"]
+	userID := vars["userId"]
 	ctx := r.Context()
-	reqUser := ctx.Value("userId").(string)
-	result, err := showUser(userId, reqUser)
+	fmt.Println(ctx)
+	reqUser := middleware.UserID(ctx)
+	result, err := showUser(userID, reqUser)
 
 	if c.CheckError(err, http.StatusNotFound, w) {
 		return
@@ -75,16 +79,16 @@ func (c *UsersController) Show(w http.ResponseWriter, r *http.Request) {
 }
 
 // Edit page
-func (c *UsersController) Edit(w http.ResponseWriter, r *http.Request) {}
+func (c *Controller) Edit(w http.ResponseWriter, r *http.Request) {}
 
 // Update user doc and save to database
-func (c *UsersController) Update(w http.ResponseWriter, r *http.Request) {}
+func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {}
 
 // Destroy a user
-func (c *UsersController) Destroy(w http.ResponseWriter, r *http.Request) {}
+func (c *Controller) Destroy(w http.ResponseWriter, r *http.Request) {}
 
 // Auth a user
-func (c *UsersController) Auth(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Auth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	r.ParseForm()

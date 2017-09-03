@@ -2,8 +2,9 @@
 package middleware
 
 import (
-	log "github.com/sirupsen/logrus"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // RecoverHandler recovers any panics and responds with a 500 error.

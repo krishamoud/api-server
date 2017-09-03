@@ -1,17 +1,18 @@
 package containers_test
 
 import (
-	"github.com/krishamoud/game-server/app/bundles/containers"
-	. "github.com/smartystreets/goconvey/convey"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/krishamoud/game-server/app/bundles/containers"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestControllerSpec(t *testing.T) {
 	Convey("Given a running server and controller instance", t, func() {
-		c := containers.ContainersController{}
+		c := containers.Controller{}
 		mux := http.NewServeMux()
 		server := httptest.NewServer(mux)
 		defer server.Close()
@@ -22,7 +23,7 @@ func TestControllerSpec(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				body, err := ioutil.ReadAll(resp.Body)
+				_, err := ioutil.ReadAll(resp.Body)
 				So(err, ShouldBeNil)
 				So(resp.StatusCode, ShouldEqual, http.StatusOK)
 			})

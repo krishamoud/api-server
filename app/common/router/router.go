@@ -27,10 +27,10 @@ func Router() *mux.Router {
 	s := r.PathPrefix("/api/v1/").Subrouter()
 
 	// Controllers declaration
-	cc := &containers.ContainersController{}
-	uc := &users.UsersController{}
-	dc := &deployments.DeploymentsController{}
-	gc := &gifs.GifsController{}
+	cc := &containers.Controller{}
+	uc := &users.Controller{}
+	dc := &deployments.Controller{}
+	gc := &gifs.Controller{}
 
 	// middleware chaining
 	commonHandlers := alice.New(middleware.LoggingHandler, middleware.RecoverHandler, middleware.AccessOriginHandler)

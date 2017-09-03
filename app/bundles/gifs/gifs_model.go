@@ -1,13 +1,11 @@
 package gifs
 
 import (
-	_ "bytes"
 	"fmt"
-	_ "io"
 	"net/http"
-	_ "strings"
 )
 
+// NewGif takes a request and returns a bool
 func NewGif(r *http.Request) bool {
 	// fmt.Println("here")
 	gif := loadFile(r)

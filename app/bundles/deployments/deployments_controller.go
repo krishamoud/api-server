@@ -2,17 +2,18 @@
 package deployments
 
 import (
-	"github.com/krishamoud/game-server/app/common/controller"
 	"net/http"
+
+	"github.com/krishamoud/game-server/app/common/controller"
 )
 
-// DeploymentsController struct
-type DeploymentsController struct {
+// Controller struct
+type Controller struct {
 	common.Controller
 }
 
 // Create saves a new user to the database
-func (c *DeploymentsController) Create(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	var err error
 	token := r.FormValue("token")
 	maxPlayers := r.FormValue("maxPlayers")
@@ -30,6 +31,6 @@ func (c *DeploymentsController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // Test is a testing endpoint
-func (c *DeploymentsController) Test(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Test(w http.ResponseWriter, r *http.Request) {
 	panic("Fucked")
 }
