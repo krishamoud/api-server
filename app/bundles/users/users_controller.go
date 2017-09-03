@@ -1,7 +1,6 @@
 package users
 
 import (
-	_ "fmt"
 	"github.com/gorilla/mux"
 	"github.com/krishamoud/game-server/app/common/controller"
 	"net/http"
@@ -29,6 +28,8 @@ func (c *UsersController) Index(w http.ResponseWriter, r *http.Request) {
 
 // New shows the new user page
 func (c *UsersController) New(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept")
 	c.SendJSON(
 		w,
 		r,
@@ -84,6 +85,9 @@ func (c *UsersController) Destroy(w http.ResponseWriter, r *http.Request) {}
 
 // Auth a user
 func (c *UsersController) Auth(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+	r.ParseForm()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	user, err := authenticateUser(email, password)

@@ -11,6 +11,7 @@ import (
 	// Resources
 	"github.com/krishamoud/game-server/app/bundles/containers"
 	"github.com/krishamoud/game-server/app/bundles/deployments"
+	"github.com/krishamoud/game-server/app/bundles/gifs"
 	"github.com/krishamoud/game-server/app/bundles/users"
 
 	// common middleware
@@ -29,9 +30,10 @@ func Router() *mux.Router {
 	cc := &containers.ContainersController{}
 	uc := &users.UsersController{}
 	dc := &deployments.DeploymentsController{}
+	gc := &gifs.GifsController{}
 
 	// middleware chaining
-	commonHandlers := alice.New(middleware.LoggingHandler, middleware.RecoverHandler)
+	commonHandlers := alice.New(middleware.LoggingHandler, middleware.RecoverHandler, middleware.AccessOriginHandler)
 	securedHandlers := commonHandlers.Append(middleware.Authenticate)
 
 	// Container Information Routes
@@ -39,18 +41,25 @@ func Router() *mux.Router {
 	s.Handle("/containers/{containerId}", securedHandlers.ThenFunc(cc.Show)).Methods("GET")
 
 	// User creation Routes
-	s.Handle("/users/new", commonHandlers.ThenFunc(uc.New)).Methods("GET")
+	// s.Handle("/users/new", commonHandlers.ThenFunc(uc.New)).Methods("GET")
 	s.Handle("/users", commonHandlers.ThenFunc(uc.Create)).Methods("POST")
+	s.Handle("/users", commonHandlers.ThenFunc(uc.New)).Methods("OPTIONS")
 
 	// User Information Routes
 	s.Handle("/users", securedHandlers.ThenFunc(uc.Index)).Methods("GET")
 	s.Handle("/users/{userId}", securedHandlers.ThenFunc(uc.Show)).Methods("GET")
+	s.Handle("/users/{userId}", commonHandlers.ThenFunc(uc.New)).Methods("OPTIONS")
+
+	// Gifs Routes
+	s.Handle("/gifs", commonHandlers.ThenFunc(gc.Create)).Methods("POST")
+	s.Handle("/gifs", commonHandlers.ThenFunc(uc.New)).Methods("OPTIONS")
 
 	// Deployment endpoint Routes
 	s.Handle("/deployments", securedHandlers.ThenFunc(dc.Create)).Methods("POST")
 
 	// Auth Routes
 	s.Handle("/auth", commonHandlers.ThenFunc(uc.Auth)).Methods("POST")
+	s.Handle("/auth", commonHandlers.ThenFunc(uc.New)).Methods("OPTIONS")
 
 	// Test Routes
 	s.Handle("/test", commonHandlers.ThenFunc(dc.Test)).Methods("POST")

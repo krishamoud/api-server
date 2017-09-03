@@ -38,12 +38,23 @@ func LoggingHandler(next http.Handler) http.Handler {
 		})
 		switch {
 		case statusCode >= 200 && statusCode < 300:
-			l.Info("Successful API Request")
+			l.Info(time.Now().UTC().Format("2006-01-02 15:04:05"))
 		case statusCode >= 300 && statusCode < 400:
-			l.Warn("Redirect API Request")
+			l.Warn(time.Now().UTC().Format("2006-01-02 15:04:05"))
 		case statusCode >= 400:
-			l.Error("Unsuccessful API Request")
+			l.Error(time.Now().UTC().Format("2006-01-02 15:04:05"))
 		}
+	}
+	return http.HandlerFunc(fn)
+}
+
+// AccessOriginHandler adds the correct access-origin header to each request
+func AccessOriginHandler(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+		next.ServeHTTP(w, r)
+		return
 	}
 	return http.HandlerFunc(fn)
 }
